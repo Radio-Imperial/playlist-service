@@ -15,5 +15,11 @@ from application import views
 # See http://code.google.com/appengine/docs/python/config/appconfig.html#Warming_Requests
 app.add_url_rule('/_ah/warmup', 'warmup', view_func=views.warmup)
 
-# List and create songs
-app.add_url_rule('/v1/songs', 'songs', view_func=views.songs, methods=['GET', 'POST'])
+# Return last item from playlist
+app.add_url_rule('/v1/playlist/last', 'last', view_func=views.last, methods=['GET'])
+
+# Add new item to playlist
+app.add_url_rule('/v1/playlist/add', 'add', view_func=views.add, methods=['POST'])
+
+# Return last ? items from playlist
+app.add_url_rule('/v1/playlist/list', 'list', view_func=views.list, methods=['GET'])
