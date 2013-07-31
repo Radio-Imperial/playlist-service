@@ -13,14 +13,14 @@ from datetime import datetime
 
 from flask import request, jsonify, abort
 
-# from flask_cache import Cache
+from flask_cache import Cache
 
 from application import app
 from models import SongModel
 from decorators import crossdomain
 
 # Flask-Cache (configured to use App Engine Memcache API)
-# cache = Cache(app)
+cache = Cache(app)
 
 def add():
     try:
@@ -47,6 +47,7 @@ def add():
         logging.error(e.args[0])
         abort(500)
 
+@cache.cached(timeout=60)
 @crossdomain(origin='*')
 def last():
     last = SongModel.query().order(-SongModel.timestamp).fetch(1)
@@ -60,10 +61,17 @@ def last():
 
 @crossdomain(origin='*')
 def list():
-    songs = SongModel.query().fetch(10)
     songs_dict = []
-    for song in songs:
-        songs_dict.append(song.to_dict())
+    try:
+        max = int(request.values.get('max', '5'))
+        songs = SongModel.query().fetch(max)
+        for song in songs:
+            songs_dict.append(song.to_dict())
+    except TypeError as e:
+        abort(400)
+    except Exception as e:
+        logging.error(e.args[0])
+        abort(500)
     return jsonify(songs = songs_dict)
 
 def warmup():

@@ -22,4 +22,4 @@ app.add_url_rule('/v1/playlist/last', 'last', view_func=views.last, methods=['GE
 app.add_url_rule('/v1/playlist/add', 'add', view_func=views.add, methods=['POST'])
 
 # Return last ? items from playlist
-app.add_url_rule('/v1/playlist/list', 'list', view_func=views.list, methods=['GET'])
+app.add_url_rule('/v1/playlist/list', 'list', view_func=views.list, methods=['GET', 'POST'])
