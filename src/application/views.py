@@ -17,6 +17,7 @@ from flask import request, jsonify, abort
 
 from application import app
 from models import SongModel
+from decorators import crossdomain
 
 # Flask-Cache (configured to use App Engine Memcache API)
 # cache = Cache(app)
@@ -26,6 +27,7 @@ def add():
         song_artist = request.values.get('artist', None)
         song_name = request.values.get('name', None)
         song_started_time = request.values.get('started_time', None)
+        song_started_time_datetime = None
         if song_started_time is not None:
             song_started_time_datetime = datetime.fromtimestamp(float(song_started_time))
         song = SongModel(
@@ -45,8 +47,9 @@ def add():
         logging.error(e.args[0])
         abort(500)
 
+@crossdomain(origin='*')
 def last():
-    last = SongModel.query().fetch(1)
+    last = SongModel.query().order(-SongModel.timestamp).fetch(1)
     try:
         return jsonify(iter(last).next().to_dict())
     except StopIteration:
@@ -55,6 +58,7 @@ def last():
         logging.error(e.args[0])
         abort(500)
 
+@crossdomain(origin='*')
 def list():
     songs = SongModel.query().fetch(10)
     songs_dict = []
