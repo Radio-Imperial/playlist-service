@@ -29,7 +29,7 @@ def add():
         started_time = request.values.get('started_time', None)
         started_time_datetime = None
         if started_time is not None:
-            started_time_datetime = datetime.fromtimestamp(float(started_time))
+            started_time_datetime = datetime.utcfromtimestamp(float(started_time))
         item = PlaylistItemModel(
             artist = artist,
             title = title,
