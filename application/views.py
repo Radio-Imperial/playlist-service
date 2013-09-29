@@ -17,13 +17,14 @@ from flask_cache import Cache
 
 from application import app
 from models import PlaylistItemModel
-from decorators import crossdomain, json_utf8
+from decorators import crossdomain, json_utf8, requires_auth
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
 
 
 @json_utf8
+@requires_auth
 def add():
     try:
         artist = request.values.get('artist', None)

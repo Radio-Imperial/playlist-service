@@ -8,6 +8,7 @@ Decorators for URL handlers
 from datetime import timedelta
 from functools import wraps, update_wrapper
 from google.appengine.api import users
+import credentials
 from flask import redirect, request, abort, make_response, current_app
 
 
@@ -31,6 +32,7 @@ def admin_required(func):
             return func(*args, **kwargs)
         return redirect(users.create_login_url(request.url))
     return decorated_view
+
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -91,3 +93,28 @@ def add_response_headers(headers={}):
 def json_utf8(f):
     """This decorator passes Content-Type: application/json; charset=UTF-8"""
     return add_response_headers({'Content-Type': 'application/json; charset=UTF-8'})(f)
+
+
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == credentials.USERNAME and password == credentials.PASSWORD
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
