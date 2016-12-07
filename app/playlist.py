@@ -141,5 +141,8 @@ def parse_playlist(obj):
 
 def load_data():
     url = "http://imperial.fm.br/playlist.xml"
-    obj = urllib2.urlopen(url)
-    return parse_playlist(obj)
+    try:
+        obj = urllib2.urlopen(url)
+        return parse_playlist(obj)
+    except urllib2.HTTPError as e:
+        return jsonify(message=u'Could not load playlist.'), 500
