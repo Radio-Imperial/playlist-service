@@ -1,0 +1,4 @@
+cron:
+- description: load playlist information
+  url: /v1/playlist/load
+  schedule: every 1 mins

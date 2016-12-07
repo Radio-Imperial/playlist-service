@@ -24,6 +24,7 @@
 *.pyc
 *.pyo
 .Python
+/lib
 
 # Installer logs
 pip-log.txt

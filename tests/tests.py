@@ -11,7 +11,7 @@ import unittest
 
 from google.appengine.ext import testbed
 
-from application import app
+from app import app
 
 
 class DemoTestCase(unittest.TestCase):
@@ -37,7 +37,7 @@ class DemoTestCase(unittest.TestCase):
 
     def test_home_redirects(self):
         rv = self.app.get('/')
-        assert rv.status == '302 FOUND'    
+        assert rv.status == '302 FOUND'
 
     def test_says_hello(self):
         rv = self.app.get('/hello/world')
@@ -58,7 +58,7 @@ class DemoTestCase(unittest.TestCase):
         rv = self.app.get('/examples')
         assert 'No examples yet' not in rv.data
         assert 'An example' in rv.data
-    
+
     def test_admin_login(self):
         #Anonymous
         rv = self.app.get('/admin_only')
@@ -77,6 +77,6 @@ class DemoTestCase(unittest.TestCase):
         assert rv.status == '404 NOT FOUND'
         assert '<h1>Not found</h1>' in rv.data
 
-    
+
 if __name__ == '__main__':
     unittest.main()

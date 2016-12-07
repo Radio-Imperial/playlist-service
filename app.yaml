@@ -13,28 +13,23 @@ builtins:
 - remote_api: on
 
 libraries:
-- name: jinja2
-  version: "2.6"
-- name: markupsafe
-  version: "0.15"
-
-
-
+- name: lxml
+  version: latest
 
 inbound_services:
 - warmup
 
 handlers:
 - url: /favicon.ico
-  static_files: application/static/img/favicon.ico
-  upload: application/static/img/favicon.ico
+  static_files: app/static/img/favicon.ico
+  upload: app/static/img/favicon.ico
 
 - url: /robots.txt
-  static_files: application/static/robots.txt
-  upload: application/static/robots.txt
+  static_files: app/static/robots.txt
+  upload: app/static/robots.txt
 
 - url: /static
-  static_dir: application/static
+  static_dir: app/static
 
 - url: .*
-  script: run.application.app
+  script: run.app.app
